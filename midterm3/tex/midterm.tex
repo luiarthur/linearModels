@@ -1,0 +1,273 @@
+% To compile: pdflatex file.tex
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{pgffor}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{appendix}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{subfig}
+\usepackage{url} % for underscore in footnote
+\usepackage[UKenglish]{isodate} % for: \today
+\cleanlookdateon                % for: \today
+%\usepackage{natbib} % Can remove if no bibliography. bibtex
+%\pagestyle{empty} % Removes page number. Graphs too big.
+
+\def\wl{\par \vspace{\baselineskip}\noindent}
+\def\beginmyfig{\begin{figure}[h]\center}
+\def\endmyfig{\end{figure}}
+\def\ds{\displaystyle}
+\def\tu{\textunderscore}
+\definecolor{grey}{rgb}{.2,.2,.2}
+\definecolor{lgrey}{rgb}{.8,.8,.8}
+\def\hline{ \textcolor{lgrey}{\hrulefill} }
+\newcommand{\m}[1]{\mathbf{\bm{#1}}} % Serif bold math
+\def\ds{\displaystyle}                                                    
+\def\inv{^{\raisebox{.2ex}{$\scriptscriptstyle-1$}}}
+\def\norm#1{\left\lVert#1\right\rVert}
+
+\def\y{\m y}
+\def\P{\m P}
+\def\I{\m I}
+\def\bk#1{\left[#1\right]}
+\def\p#1{\left(#1\right)}
+
+
+% \def for THIS ASSIGNMENT!!!%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+% my title:
+\begin{center}
+  {\huge \textbf{UCSC AMS 256 Midterm 3}
+    \footnote{\url{http://nbviewer.jupyter.org/github/luiarthur/linearModels/blob/master/midterm3/midterm3.R.ipynb}}
+  }\\
+  \wl
+  UCSC AMS 256 Midterm 3\\
+  \noindent\today\\
+  Arthur Lui\\
+  \hline
+\end{center}
+
+\noindent
+\textbf{1a) Which group of students has the lowest score? (What is it?) Which group of students has the highest score? (What is it?)}\\
+
+\noindent
+Note that 
+$$
+\begin{array}{rclclcr}
+    E[y_{11}] &=& \mu + \alpha_1 + \eta_1 + \gamma_{11} &\approx& \hat\mu &=& .8893 \\
+    E[y_{12}] &=& \mu + \alpha_1 + \eta_2 + \gamma_{12} &\approx& \hat\mu +\hat\eta_2 &=& 2.1457 \\
+    E[y_{21}] &=& \mu + \alpha_2 + \eta_1 + \gamma_{21} &\approx& \hat\mu +\hat\alpha_2 &=& 2.8753 \\
+    E[y_{22}] &=& \mu + \alpha_2 + \eta_2 + \gamma_{22} &\approx& \hat\mu + \hat\alpha_2 + \hat\eta_2 + \hat\gamma_{22}&=& 2.4686 \\
+    E[y_{31}] &=& \mu + \alpha_3 + \eta_1 + \gamma_{31} &\approx& \hat\mu +\hat\alpha_3 &=& 2.0782 \\
+    E[y_{32}] &=& \mu + \alpha_3 + \eta_2 + \gamma_{32} &\approx& \hat\mu + \hat\alpha_3 + \hat\eta_2 + \hat\gamma_{32}&=& 1.7216 \\
+\end{array}
+$$
+
+\noindent
+So, the group that corresponds to $y_{11}$ has the \textbf{lowest} math
+ineptitude score. That is, \textbf{Economics} majors from \textbf{rural} high
+school backgrounds, with a score of \textbf{.8893}.\\
+
+\noindent
+The group that corresponds to $y_{21}$ has the \textbf{highest} math ineptitude
+score. That is, \textbf{Anthropology} majors from \textbf{rural} high school
+backgrounds, with a score of \textbf{2.8753}.\\
+
+\noindent
+\textbf{1b) In the summary(.) output there is an F-statistic, F= 2:553 with 5 and 29 degrees of freedom.}
+
+\noindent
+\begin{itemize}
+  \item What are the null and alternative hypotheses being tested?
+  \item What conclusion would you make? (Please state in general terms that relate to the groups rather than parameters).
+\end{itemize}
+
+\noindent The hypotheses being tested are:
+
+\noindent
+$H_0: \alpha_1 = \alpha_2 = \alpha_3 = \eta_1 = \eta_2 = 0$ vs.\\
+\noindent
+$H_1$: At least one of the parameters is not 0.\\
+
+\noindent
+Heuristically, the null hypothesis is that the effect of majors and high school
+background is not significantly different from zero. The alternative hypothesis
+is that at least one major or background significantly different from zero and,
+hence, significantly effects math ineptitude scores (at the 95\% confidence
+level).\\
+
+\noindent
+\textbf{1c) In the anova(.) output the p-value on the line corresponding to BG is
+large, yet in the summary from `lm` the p-value for BG2 is small. Do the
+p-values from the two summaries contradict each other? Explain what is being
+tested and what it means in this context. Is the students background relevant
+for predicting the score?}\\
+
+\noindent
+In the ANOVA table, the sum of squares corresponding to BG is the reduction in
+sum of squares by introducing High School Background as a parameter in the
+model **after** having introduced college Major (and a grand mean or intercept)
+as parameters to the model. Similarly, the p-value corresponding to BG is the
+p-value associated with the null hypothesis that high school background (BG)
+does not improve the model with the intercept and college major as parameters.
+In other words, in the ANOVA table, the hypothesis $H_0: \eta_1 = \eta_2 = 0$.
+This means that sequentially added to the model, high school background does
+not contribute to a reduction in the sums of squares at the 95\% confidence
+level. \\
+
+\noindent
+In the summary table, the p-value corresponding to BG2 is smaller than that of
+BG in ANOVA (in fact, it's smaller than .05). The hypothesis being tested is
+not the same. In this case, the hypothesis is $H_0: \eta_2 = 0$. $\eta_2$ is
+not being added sequentially to the model. Rather all parameters are fit in the
+model simultaneously. In this case, high school background contributes
+significantly to the model in predicting mathematics ineptitude. \\
+
+\noindent
+For completeness, the two fits (in `anova` and `lm`) *should* be the same,
+assuming the data was not tampered with to trick us... But the *reporting* is
+different.\\
+
+
+\noindent
+\textbf{2a) Estimate $\beta_1,\beta_2,$ and $\sigma^2$}\\
+
+$$
+\begin{array}{rcl}
+  \hat\beta &=& (X'X)\inv X'y\\
+  \hat\sigma^2 &=& \ds\frac{(y-X\hat\beta)'(y-X\hat\beta)}{8-3}
+\end{array}
+$$
+
+$$
+\begin{pmatrix}
+\hat\beta_1 \\
+\hat\beta_2 \\
+\hat\sigma^2 \\
+\end{pmatrix} =
+\begin{pmatrix}
+1.625\\
+2.375\\
+1.550\\
+\end{pmatrix}
+$$
+\wl
+
+\noindent
+\textbf{2b) Give a 95\% confidence interval for $\beta_1$ and $\beta_1 + \beta_2$}\\
+
+\noindent Let
+$$
+  C = \begin{pmatrix}
+    0 & 1 & 0 \\
+    0 & 1 & 1 \\
+  \end{pmatrix}\\
+$$
+
+\noindent
+Then $C\hat\beta$ is testable because each component of $C$ is estimable and C
+has full row rank. A 95\% confidence interval for $C\beta$ can be constructed
+as
+
+$$
+C\hat\beta \pm t_{\alpha/2,8-3=5}\sqrt{\hat\sigma^2C(X'X)\inv C'},
+$$
+where $\alpha = .05$ 
+
+\noindent
+The 95\% confidence interval for $\beta_1$ is \textbf{(.4538, .2796)}.\\
+\noindent
+The 95\% confidence interval for $\beta_1+\beta_2$ is \textbf{(2.289, 5.711)}.\\
+
+
+\noindent
+\textbf{2c)  Perform an $\alpha = .01$ test for $H_0: \beta_2 = 3$}
+
+\noindent
+Using the results above, a 99\% confidence interval for $\beta_2$ can be
+constructed as
+$$
+\hat\beta_2 \pm t_{.01/2,5} \bk{\sqrt{\hat\sigma^2(X'X)\inv}}_{22}
+$$
+
+\noindent
+The 95\% confidence interval for $\beta_2$ is \textbf{(-.2121, 3.462)}.\\
+
+\noindent
+Since the confidence interval contains 3, at the 95\% confidence level, we
+\textbf{fail to reject} the null hypothesis that $\beta_2 = 3$.\\
+
+\noindent
+\textbf{2d) Find the p-value for the test of $H_0: \beta_1 - \beta_2 = 0$.}\\
+
+\noindent
+Let
+$$
+  \lambda^T = (0,1,-1)
+$$
+
+\noindent
+Then $t$ test statistic can be computed as 
+$$
+\frac{\lambda^T\hat\beta}{\sqrt{\hat\sigma^2\lambda^T(X^TX)\inv\lambda}} \sim t_5
+$$
+
+\noindent 
+The computed $t$ statistic is -1.205. The associated p-value was computed with
+the ``pt" function in R. The area under the upper tail of the distribution
+evaluated at $|-1.205|$ multiplied by 2 was computed to be \textbf{.2822}. So, at
+the 95\% confidence level, we \textbf{fail to reject} the null hypothesis that the
+difference between $\beta_1$ and $\beta_2$ is 0.\\
+
+\noindent 
+\textbf{3) Show that for a linear model with an intercept, $R^2$ is simply the square of the correlation between the data $y_i$ and the predicted values $\hat{y}_i$.}
+
+\noindent 
+We need to show that $R^2 = \ds\frac{\y^T(\P_x-\P_1)\y}{\y^T(\I-\P_1)\y} = 
+\p{\frac{(\y-\bar\y)^T(\hat\y-\bar\y)}{\ds\sqrt{(\y-\bar\y)^T(\y-\bar\y)(\hat\y-\bar\y)^T(\hat\y-\bar\y)}}}^2 =
+\p{\text{Cor}(\y,\hat{\y})}^2$.
+
+\noindent 
+First, note that by adding and subtracting $\hat\y$,
+
+$$
+\begin{array}{rcl}
+    (\y-\bar\y)^T(\hat\y-\bar\y) &=& \bk{(\hat\y - \bar\y) + (\y-\hat\y)}^T(\hat\y-\bar\y) \\
+    &=& (\hat\y - \bar\y)^T(\hat\y-\bar\y) + (\y-\hat\y)^T(\hat\y-\bar\y) \\
+    &=& (\hat\y - \bar\y)^T(\hat\y-\bar\y) + 0.
+\end{array}
+$$
+
+\noindent 
+Then, Cor($\y,\hat\y$) can be computed as follows:
+
+$$
+\begin{array}{rcl}
+    \text{Cor}(\y,\hat\y) &=& \frac{\ds(\y-\bar\y)^T(\hat\y-\bar\y)}{\ds\sqrt{(\y-\bar\y)^T(\y-\bar\y)(\hat\y-\bar\y)^T(\hat\y-\bar\y)}} \\
+    &=& \frac{\ds(\hat\y - \bar\y)^T(\hat\y-\bar\y)}{\ds\sqrt{(\y-\bar\y)^T(\y-\bar\y)(\hat\y-\bar\y)^T(\hat\y-\bar\y)}} \\
+    &=& \sqrt\frac{\ds{(\hat\y - \bar\y)^T(\hat\y-\bar\y)}}{\ds{(\y-\bar\y)^T(\y-\bar\y)}} \\
+    &=& \sqrt\frac{\ds{\hat\y^T\hat\y - n\bar{y}^2}}{\ds{\y^T\y-n\bar{y}^2}} \\
+\end{array}
+$$
+
+\noindent 
+Now, 
+$$
+\begin{array}{rcl}
+    R^2 &=& \ds\frac{\y^T(\P_x-\P_1)\y}{\y^T(\I-\P_1)\y} \\
+    &=& \ds\frac{\y^T\P_x\y - \y^T\P_1\y}{\y^T\y - \y^T\P_1\y}
+    = \ds\frac{\hat\y^T\hat\y - \bar\y^T\bar\y}{\y^T\y - \bar\y^T\bar\y} \quad(\because \text{ projection matrices are symmetric and idempotent}) \\
+    &=& \ds\frac{\hat\y^T\hat\y - n\bar{y}^2}{\y^T\y - n\bar{y}^2}
+\end{array}
+$$
+
+\noindent 
+Therefore, $R^2 = \p{\text{Cor}(\y,\hat\y)}^2$.
+%%% Bibliography
+%\bibliographystyle{asabyu} % bibtex
+%\bibliography{sdp}         % bibtex
+\end{document}
